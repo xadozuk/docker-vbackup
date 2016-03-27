@@ -48,8 +48,9 @@ do
                 continue
             fi
         fi
-
-		$DOCKER run --rm --volumes-from $id --volumes-from $this_id $IMAGE tar -zcf "${BASE}${name}${volume}_$(date +"%Y%m%d%H%M%S").tar.gz" $volume > /var/log/vbackup.log 2>&1
+        
+        volume_name=$(echo $volume | sed "s/\//_/g")
+		$DOCKER run --rm --volumes-from $id --volumes-from $this_id $IMAGE tar -zcf "${BASE}${name}${volume_name}.$(date +"%Y%m%d%H%M%S").tar.gz" $volume > /var/log/vbackup.log 2>&1
 		
 		if [ $? -eq 0 ]; then
 			printf "\t[\e[92mOK\e[39m]\n"
@@ -64,7 +65,7 @@ printf "Cleaning old backups"
 dirs=$(find $BASE/* -maxdepth 1 -type d)
 for dir in $dirs
 do
-    volumes=$(find $dir/* -type f -exec basename {} \; | cut -d '_' -f 1 | uniq)
+    volumes=$(find $dir/* -type f -exec basename {} \; | cut -d '.' -f 1 | uniq)
     
     for v in $volumes
     do
