@@ -5,6 +5,7 @@ BASE="/backups"
 CONF_FILE=$BASE/config.json
 
 DOCKER=docker
+IMAGE=xadozuk/vbackup
 
 printf "[$(date +"%b %d %T")] Starting backup\n"
 
@@ -48,7 +49,7 @@ do
             fi
         fi
 
-		$DOCKER run --rm --volumes-from $id --volumes-from $this_id xadozuk/volumes-backup tar -zcf "${BASE}${name}${volume}_$(date +"%Y%m%d%H%M%S").tar.gz" $volume > /dev/null 2>&1
+		$DOCKER run --rm --volumes-from $id --volumes-from $this_id $IMAGE tar -zcf "${BASE}${name}${volume}_$(date +"%Y%m%d%H%M%S").tar.gz" $volume > /dev/null 2>&1
 		
 		if [ $? -eq 0 ]; then
 			printf "\t[\e[92mOK\e[39m]\n"
