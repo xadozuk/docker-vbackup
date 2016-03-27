@@ -6,7 +6,7 @@ CONF_FILE=$BASE/config.json
 
 DOCKER=docker
 
-printf "[$(date + "%b %d %T")] Starting backup\n"
+printf "[$(date +"%b %d %T")] Starting backup\n"
 
 this_id=$(cat /proc/self/cgroup | grep "name" | head -n 1 | sed "s/.*docker\///g")
 containers=$($DOCKER ps -aqf name=data | xargs docker inspect | jq -c ".[] | { id: .Id, name: .Name , volumes: [.Mounts[].Destination] }")
@@ -73,5 +73,5 @@ done
 
 printf "\t[\e[92mOK\e[39m]\n"
 
-printf "[$(date + "%b %d %T")] Finish backuping\n"
+printf "[$(date +"%b %d %T")] Finish backuping\n"
 
