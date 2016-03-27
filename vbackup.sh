@@ -69,7 +69,7 @@ do
     
     for v in $volumes
     do
-        find $dir -name "$v*.tar.gz" -type f | sort | head -n -7 | xargs rm
+        find $dir -name "$v*.tar.gz" -type f | sort | head -n -7 | xargs rm > /dev/null 2>&1
     done 
 done
 
