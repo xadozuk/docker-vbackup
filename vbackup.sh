@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 BASE="/backups"
 
@@ -10,7 +10,7 @@ IMAGE=xadozuk/vbackup
 printf "[$(date +"%b %d %T")] Starting backup\n"
 
 this_id=$(cat /proc/self/cgroup | grep "name" | head -n 1 | sed "s/.*docker\///g")
-containers=$($DOCKER ps -aqf name=data | xargs docker inspect | jq -c ".[] | { id: .Id, name: .Name , volumes: [.Mounts[].Destination] }")
+containers=$($DOCKER ps -aqf name=data | xargs docker inspect 2>/dev/null | jq -c ".[] | { id: .Id, name: .Name , volumes: [.Mounts[].Destination] }")
 for container in $containers
 do
 	name=$(echo $container | jq -r ".name")
@@ -59,6 +59,10 @@ do
 		fi
 	done
 done
+
+if [ -z "$containers" ]; then
+    printf "[$(date +"%b %d %T")] No data container found\n"
+fi
 
 # Cleaning old backups
 printf "Cleaning old backups"
